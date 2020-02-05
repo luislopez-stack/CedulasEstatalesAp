@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CedulaEstatalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="BITACORA">
+          <Key>
+            <PropertyRef Name="ID_BITACORA" />
+          </Key>
+          <Property Name="ID_BITACORA" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_CEDULA" Type="bigint" />
+          <Property Name="FECHA" Type="datetime" />
+          <Property Name="TIPO_MOVIMIENTO" Type="tinyint" />
+          <Property Name="ID_USUARIO" Type="int" />
+        </EntityType>
+        <EntityType Name="CAT_ESTATUS">
+          <Key>
+            <PropertyRef Name="ID_ESTATUS" />
+          </Key>
+          <Property Name="ID_ESTATUS" Type="tinyint" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="40" />
+        </EntityType>
+        <EntityType Name="CAT_FIRMANTE">
+          <Key>
+            <PropertyRef Name="ID_FIRMANTE" />
+          </Key>
+          <Property Name="ID_FIRMANTE" Type="tinyint" Nullable="false" />
+          <Property Name="NOMBRE" Type="varchar" MaxLength="100" />
+          <Property Name="PRIMER_APELLIDO" Type="varchar" MaxLength="100" />
+          <Property Name="SEGUNDO_APELLIDO" Type="varchar" MaxLength="100" />
+          <Property Name="NO_CERTIFICADO" Type="varchar" MaxLength="20" />
+          <Property Name="CERTIFICADO" Type="varchar" MaxLength="5000" />
+          <Property Name="PASSWORD" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="CAT_MOVIMIENTO">
+          <Key>
+            <PropertyRef Name="TIPO_MOVIMIENTO" />
+          </Key>
+          <Property Name="TIPO_MOVIMIENTO" Type="tinyint" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="varchar" MaxLength="35" />
+        </EntityType>
+        <EntityType Name="DOC_CEDULA">
+          <Key>
+            <PropertyRef Name="ID_CEDULA" />
+          </Key>
+          <Property Name="ID_CEDULA" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CURP" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="NOMBRES" Type="varchar" MaxLength="100" />
+          <Property Name="PRIMER_APELLIDO" Type="varchar" MaxLength="100" />
+          <Property Name="SEGUNDO_APELLIDO" Type="varchar" MaxLength="100" />
+          <Property Name="INSTITUCION" Type="varchar" MaxLength="250" />
+          <Property Name="ID_CARRERA" Type="int" Nullable="false" />
+          <Property Name="DESC_CARRERA" Type="varchar" MaxLength="250" />
+          <Property Name="TIPO_CEDULA" Type="char" MaxLength="1" />
+          <Property Name="ID_ESTATUS" Type="tinyint" />
+          <Property Name="FECHA_CARGA" Type="datetime" />
+          <Property Name="FECHA_SELLO" Type="datetime" />
+          <Property Name="CEDULA_FEDERAL" Type="varchar" MaxLength="10" />
+          <Property Name="SELLO" Type="varchar" MaxLength="400" />
+          <Property Name="HASH_QR" Type="varchar" MaxLength="100" />
+          <Property Name="ID_FIRMANTE" Type="tinyint" />
+        </EntityType>
+        <EntityType Name="XML">
+          <Key>
+            <PropertyRef Name="ID_XML" />
+          </Key>
+          <Property Name="ID_XML" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_CEDULA" Type="bigint" />
+          <Property Name="XML" Type="varchar(max)" />
+        </EntityType>
+        <Association Name="FK_BITACORA_REFERENCE_CAT_MOVI">
+          <End Role="CAT_MOVIMIENTO" Type="Self.CAT_MOVIMIENTO" Multiplicity="0..1" />
+          <End Role="BITACORA" Type="Self.BITACORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAT_MOVIMIENTO">
+              <PropertyRef Name="TIPO_MOVIMIENTO" />
+            </Principal>
+            <Dependent Role="BITACORA">
+              <PropertyRef Name="TIPO_MOVIMIENTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BITACORA_REFERENCE_DOC_CEDU">
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="0..1" />
+          <End Role="BITACORA" Type="Self.BITACORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOC_CEDULA">
+              <PropertyRef Name="ID_CEDULA" />
+            </Principal>
+            <Dependent Role="BITACORA">
+              <PropertyRef Name="ID_CEDULA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOC_CEDU_FK_ESTATU_CAT_ESTA">
+          <End Role="CAT_ESTATUS" Type="Self.CAT_ESTATUS" Multiplicity="0..1" />
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAT_ESTATUS">
+              <PropertyRef Name="ID_ESTATUS" />
+            </Principal>
+            <Dependent Role="DOC_CEDULA">
+              <PropertyRef Name="ID_ESTATUS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOC_CEDU_REFERENCE_CAT_FIRM">
+          <End Role="CAT_FIRMANTE" Type="Self.CAT_FIRMANTE" Multiplicity="0..1" />
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAT_FIRMANTE">
+              <PropertyRef Name="ID_FIRMANTE" />
+            </Principal>
+            <Dependent Role="DOC_CEDULA">
+              <PropertyRef Name="ID_FIRMANTE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_XML_REFERENCE_DOC_CEDU">
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="0..1" />
+          <End Role="XML" Type="Self.XML" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOC_CEDULA">
+              <PropertyRef Name="ID_CEDULA" />
+            </Principal>
+            <Dependent Role="XML">
+              <PropertyRef Name="ID_CEDULA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CedulaEstatalModelStoreContainer">
+          <EntitySet Name="BITACORA" EntityType="Self.BITACORA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CAT_ESTATUS" EntityType="Self.CAT_ESTATUS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CAT_FIRMANTE" EntityType="Self.CAT_FIRMANTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CAT_MOVIMIENTO" EntityType="Self.CAT_MOVIMIENTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DOC_CEDULA" EntityType="Self.DOC_CEDULA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="XML" EntityType="Self.XML" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_BITACORA_REFERENCE_CAT_MOVI" Association="Self.FK_BITACORA_REFERENCE_CAT_MOVI">
+            <End Role="CAT_MOVIMIENTO" EntitySet="CAT_MOVIMIENTO" />
+            <End Role="BITACORA" EntitySet="BITACORA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BITACORA_REFERENCE_DOC_CEDU" Association="Self.FK_BITACORA_REFERENCE_DOC_CEDU">
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+            <End Role="BITACORA" EntitySet="BITACORA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOC_CEDU_FK_ESTATU_CAT_ESTA" Association="Self.FK_DOC_CEDU_FK_ESTATU_CAT_ESTA">
+            <End Role="CAT_ESTATUS" EntitySet="CAT_ESTATUS" />
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOC_CEDU_REFERENCE_CAT_FIRM" Association="Self.FK_DOC_CEDU_REFERENCE_CAT_FIRM">
+            <End Role="CAT_FIRMANTE" EntitySet="CAT_FIRMANTE" />
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_XML_REFERENCE_DOC_CEDU" Association="Self.FK_XML_REFERENCE_DOC_CEDU">
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+            <End Role="XML" EntitySet="XML" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CedulaEstatalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="BITACORA">
+          <Key>
+            <PropertyRef Name="ID_BITACORA" />
+          </Key>
+          <Property Name="ID_BITACORA" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_CEDULA" Type="Int64" />
+          <Property Name="FECHA" Type="DateTime" Precision="3" />
+          <Property Name="TIPO_MOVIMIENTO" Type="Byte" />
+          <Property Name="ID_USUARIO" Type="Int32" />
+          <NavigationProperty Name="CAT_MOVIMIENTO" Relationship="Self.FK_BITACORA_REFERENCE_CAT_MOVI" FromRole="BITACORA" ToRole="CAT_MOVIMIENTO" />
+          <NavigationProperty Name="DOC_CEDULA" Relationship="Self.FK_BITACORA_REFERENCE_DOC_CEDU" FromRole="BITACORA" ToRole="DOC_CEDULA" />
+        </EntityType>
+        <EntityType Name="CAT_ESTATUS">
+          <Key>
+            <PropertyRef Name="ID_ESTATUS" />
+          </Key>
+          <Property Name="ID_ESTATUS" Type="Byte" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DOC_CEDULA" Relationship="Self.FK_DOC_CEDU_FK_ESTATU_CAT_ESTA" FromRole="CAT_ESTATUS" ToRole="DOC_CEDULA" />
+        </EntityType>
+        <EntityType Name="CAT_FIRMANTE">
+          <Key>
+            <PropertyRef Name="ID_FIRMANTE" />
+          </Key>
+          <Property Name="ID_FIRMANTE" Type="Byte" Nullable="false" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PRIMER_APELLIDO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SEGUNDO_APELLIDO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NO_CERTIFICADO" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CERTIFICADO" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="PASSWORD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DOC_CEDULA" Relationship="Self.FK_DOC_CEDU_REFERENCE_CAT_FIRM" FromRole="CAT_FIRMANTE" ToRole="DOC_CEDULA" />
+        </EntityType>
+        <EntityType Name="CAT_MOVIMIENTO">
+          <Key>
+            <PropertyRef Name="TIPO_MOVIMIENTO" />
+          </Key>
+          <Property Name="TIPO_MOVIMIENTO" Type="Byte" Nullable="false" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="BITACORA" Relationship="Self.FK_BITACORA_REFERENCE_CAT_MOVI" FromRole="CAT_MOVIMIENTO" ToRole="BITACORA" />
+        </EntityType>
+        <EntityType Name="DOC_CEDULA">
+          <Key>
+            <PropertyRef Name="ID_CEDULA" />
+          </Key>
+          <Property Name="ID_CEDULA" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CURP" Type="String" MaxLength="18" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NOMBRES" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PRIMER_APELLIDO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SEGUNDO_APELLIDO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="INSTITUCION" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ID_CARRERA" Type="Int32" Nullable="false" />
+          <Property Name="DESC_CARRERA" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="TIPO_CEDULA" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ID_ESTATUS" Type="Byte" />
+          <Property Name="FECHA_CARGA" Type="DateTime" Precision="3" />
+          <Property Name="FECHA_SELLO" Type="DateTime" Precision="3" />
+          <Property Name="CEDULA_FEDERAL" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SELLO" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="HASH_QR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ID_FIRMANTE" Type="Byte" />
+          <NavigationProperty Name="BITACORA" Relationship="Self.FK_BITACORA_REFERENCE_DOC_CEDU" FromRole="DOC_CEDULA" ToRole="BITACORA" />
+          <NavigationProperty Name="CAT_ESTATUS" Relationship="Self.FK_DOC_CEDU_FK_ESTATU_CAT_ESTA" FromRole="DOC_CEDULA" ToRole="CAT_ESTATUS" />
+          <NavigationProperty Name="CAT_FIRMANTE" Relationship="Self.FK_DOC_CEDU_REFERENCE_CAT_FIRM" FromRole="DOC_CEDULA" ToRole="CAT_FIRMANTE" />
+          <NavigationProperty Name="XML" Relationship="Self.FK_XML_REFERENCE_DOC_CEDU" FromRole="DOC_CEDULA" ToRole="XML" />
+        </EntityType>
+        <EntityType Name="XML">
+          <Key>
+            <PropertyRef Name="ID_XML" />
+          </Key>
+          <Property Name="ID_XML" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_CEDULA" Type="Int64" />
+          <Property Name="XML1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="DOC_CEDULA" Relationship="Self.FK_XML_REFERENCE_DOC_CEDU" FromRole="XML" ToRole="DOC_CEDULA" />
+        </EntityType>
+        <Association Name="FK_BITACORA_REFERENCE_CAT_MOVI">
+          <End Role="CAT_MOVIMIENTO" Type="Self.CAT_MOVIMIENTO" Multiplicity="0..1" />
+          <End Role="BITACORA" Type="Self.BITACORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAT_MOVIMIENTO">
+              <PropertyRef Name="TIPO_MOVIMIENTO" />
+            </Principal>
+            <Dependent Role="BITACORA">
+              <PropertyRef Name="TIPO_MOVIMIENTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BITACORA_REFERENCE_DOC_CEDU">
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="0..1" />
+          <End Role="BITACORA" Type="Self.BITACORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOC_CEDULA">
+              <PropertyRef Name="ID_CEDULA" />
+            </Principal>
+            <Dependent Role="BITACORA">
+              <PropertyRef Name="ID_CEDULA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOC_CEDU_FK_ESTATU_CAT_ESTA">
+          <End Role="CAT_ESTATUS" Type="Self.CAT_ESTATUS" Multiplicity="0..1" />
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAT_ESTATUS">
+              <PropertyRef Name="ID_ESTATUS" />
+            </Principal>
+            <Dependent Role="DOC_CEDULA">
+              <PropertyRef Name="ID_ESTATUS" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DOC_CEDU_REFERENCE_CAT_FIRM">
+          <End Role="CAT_FIRMANTE" Type="Self.CAT_FIRMANTE" Multiplicity="0..1" />
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAT_FIRMANTE">
+              <PropertyRef Name="ID_FIRMANTE" />
+            </Principal>
+            <Dependent Role="DOC_CEDULA">
+              <PropertyRef Name="ID_FIRMANTE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_XML_REFERENCE_DOC_CEDU">
+          <End Role="DOC_CEDULA" Type="Self.DOC_CEDULA" Multiplicity="0..1" />
+          <End Role="XML" Type="Self.XML" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DOC_CEDULA">
+              <PropertyRef Name="ID_CEDULA" />
+            </Principal>
+            <Dependent Role="XML">
+              <PropertyRef Name="ID_CEDULA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CedulaEstatalEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="BITACORA" EntityType="Self.BITACORA" />
+          <EntitySet Name="CAT_ESTATUS" EntityType="Self.CAT_ESTATUS" />
+          <EntitySet Name="CAT_FIRMANTE" EntityType="Self.CAT_FIRMANTE" />
+          <EntitySet Name="CAT_MOVIMIENTO" EntityType="Self.CAT_MOVIMIENTO" />
+          <EntitySet Name="DOC_CEDULA" EntityType="Self.DOC_CEDULA" />
+          <EntitySet Name="XML" EntityType="Self.XML" />
+          <AssociationSet Name="FK_BITACORA_REFERENCE_CAT_MOVI" Association="Self.FK_BITACORA_REFERENCE_CAT_MOVI">
+            <End Role="CAT_MOVIMIENTO" EntitySet="CAT_MOVIMIENTO" />
+            <End Role="BITACORA" EntitySet="BITACORA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BITACORA_REFERENCE_DOC_CEDU" Association="Self.FK_BITACORA_REFERENCE_DOC_CEDU">
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+            <End Role="BITACORA" EntitySet="BITACORA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOC_CEDU_FK_ESTATU_CAT_ESTA" Association="Self.FK_DOC_CEDU_FK_ESTATU_CAT_ESTA">
+            <End Role="CAT_ESTATUS" EntitySet="CAT_ESTATUS" />
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DOC_CEDU_REFERENCE_CAT_FIRM" Association="Self.FK_DOC_CEDU_REFERENCE_CAT_FIRM">
+            <End Role="CAT_FIRMANTE" EntitySet="CAT_FIRMANTE" />
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_XML_REFERENCE_DOC_CEDU" Association="Self.FK_XML_REFERENCE_DOC_CEDU">
+            <End Role="DOC_CEDULA" EntitySet="DOC_CEDULA" />
+            <End Role="XML" EntitySet="XML" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CedulaEstatalModelStoreContainer" CdmEntityContainer="CedulaEstatalEntities">
+          <EntitySetMapping Name="BITACORA">
+            <EntityTypeMapping TypeName="CedulaEstatalModel.BITACORA">
+              <MappingFragment StoreEntitySet="BITACORA">
+                <ScalarProperty Name="ID_BITACORA" ColumnName="ID_BITACORA" />
+                <ScalarProperty Name="ID_CEDULA" ColumnName="ID_CEDULA" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="TIPO_MOVIMIENTO" ColumnName="TIPO_MOVIMIENTO" />
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CAT_ESTATUS">
+            <EntityTypeMapping TypeName="CedulaEstatalModel.CAT_ESTATUS">
+              <MappingFragment StoreEntitySet="CAT_ESTATUS">
+                <ScalarProperty Name="ID_ESTATUS" ColumnName="ID_ESTATUS" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CAT_FIRMANTE">
+            <EntityTypeMapping TypeName="CedulaEstatalModel.CAT_FIRMANTE">
+              <MappingFragment StoreEntitySet="CAT_FIRMANTE">
+                <ScalarProperty Name="ID_FIRMANTE" ColumnName="ID_FIRMANTE" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="PRIMER_APELLIDO" ColumnName="PRIMER_APELLIDO" />
+                <ScalarProperty Name="SEGUNDO_APELLIDO" ColumnName="SEGUNDO_APELLIDO" />
+                <ScalarProperty Name="NO_CERTIFICADO" ColumnName="NO_CERTIFICADO" />
+                <ScalarProperty Name="CERTIFICADO" ColumnName="CERTIFICADO" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CAT_MOVIMIENTO">
+            <EntityTypeMapping TypeName="CedulaEstatalModel.CAT_MOVIMIENTO">
+              <MappingFragment StoreEntitySet="CAT_MOVIMIENTO">
+                <ScalarProperty Name="TIPO_MOVIMIENTO" ColumnName="TIPO_MOVIMIENTO" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DOC_CEDULA">
+            <EntityTypeMapping TypeName="CedulaEstatalModel.DOC_CEDULA">
+              <MappingFragment StoreEntitySet="DOC_CEDULA">
+                <ScalarProperty Name="ID_CEDULA" ColumnName="ID_CEDULA" />
+                <ScalarProperty Name="CURP" ColumnName="CURP" />
+                <ScalarProperty Name="NOMBRES" ColumnName="NOMBRES" />
+                <ScalarProperty Name="PRIMER_APELLIDO" ColumnName="PRIMER_APELLIDO" />
+                <ScalarProperty Name="SEGUNDO_APELLIDO" ColumnName="SEGUNDO_APELLIDO" />
+                <ScalarProperty Name="INSTITUCION" ColumnName="INSTITUCION" />
+                <ScalarProperty Name="ID_CARRERA" ColumnName="ID_CARRERA" />
+                <ScalarProperty Name="DESC_CARRERA" ColumnName="DESC_CARRERA" />
+                <ScalarProperty Name="TIPO_CEDULA" ColumnName="TIPO_CEDULA" />
+                <ScalarProperty Name="ID_ESTATUS" ColumnName="ID_ESTATUS" />
+                <ScalarProperty Name="FECHA_CARGA" ColumnName="FECHA_CARGA" />
+                <ScalarProperty Name="FECHA_SELLO" ColumnName="FECHA_SELLO" />
+                <ScalarProperty Name="CEDULA_FEDERAL" ColumnName="CEDULA_FEDERAL" />
+                <ScalarProperty Name="SELLO" ColumnName="SELLO" />
+                <ScalarProperty Name="HASH_QR" ColumnName="HASH_QR" />
+                <ScalarProperty Name="ID_FIRMANTE" ColumnName="ID_FIRMANTE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="XML">
+            <EntityTypeMapping TypeName="CedulaEstatalModel.XML">
+              <MappingFragment StoreEntitySet="XML">
+                <ScalarProperty Name="ID_XML" ColumnName="ID_XML" />
+                <ScalarProperty Name="ID_CEDULA" ColumnName="ID_CEDULA" />
+                <ScalarProperty Name="XML1" ColumnName="XML" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

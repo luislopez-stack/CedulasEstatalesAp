@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="5b14c43c09e04730b705c706f049264a" Name="Diagram1">
+        <EntityTypeShape EntityType="CedulaEstatalModel.BITACORA" Width="1.5" PointX="5.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CedulaEstatalModel.CAT_ESTATUS" Width="1.5" PointX="0.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CedulaEstatalModel.CAT_FIRMANTE" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CedulaEstatalModel.CAT_MOVIMIENTO" Width="1.5" PointX="3" PointY="9.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="CedulaEstatalModel.DOC_CEDULA" Width="1.5" PointX="3" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CedulaEstatalModel.XML" Width="1.5" PointX="5.25" PointY="7.25" IsExpanded="true" />
+        <AssociationConnector Association="CedulaEstatalModel.FK_BITACORA_REFERENCE_CAT_MOVI" ManuallyRouted="false" />
+        <AssociationConnector Association="CedulaEstatalModel.FK_BITACORA_REFERENCE_DOC_CEDU" ManuallyRouted="false" />
+        <AssociationConnector Association="CedulaEstatalModel.FK_DOC_CEDU_FK_ESTATU_CAT_ESTA" ManuallyRouted="false" />
+        <AssociationConnector Association="CedulaEstatalModel.FK_DOC_CEDU_REFERENCE_CAT_FIRM" ManuallyRouted="false" />
+        <AssociationConnector Association="CedulaEstatalModel.FK_XML_REFERENCE_DOC_CEDU" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
