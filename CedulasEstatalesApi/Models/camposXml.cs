@@ -18,7 +18,8 @@ namespace CedulasEstatalesApi.Models
 
         public string CEDULAFEDERAL { get; set; }
         public byte? ESTATUS { get; set; }
-        public string XML { get; set; }
         public string SELLO { get; set; }
+        public string HASH { get; set; }
+        public string XML { get; set; }
     }
 }

@@ -44,10 +44,11 @@ namespace CedulasEstatalesApi.Cs
             try
             {
                 //string archivoCertificado = "";
-                string key = @"C:\Users\Luis\Documents\MiTitulo\FIEL_AULJ951012PZ7_20190328160816\Claveprivada_FIEL_SOLR761006UN5_20191112_125540.key";
-
+                //string key = @"C:\Users\Luis\Documents\MiTitulo\FIEL_AULJ951012PZ7_20190328160816\Claveprivada_FIEL_SOLR761006UN5_20191112_125540.key";
+                string key = @"C:\CedulasEstatales\key\Claveprivada_FIEL_SOLR761006UN5_20191112_125540.key";
+                
                 string Password = firmante.PASSWORD;
-                string strCadenaOriginal = cadenaOriginal; //mando a llamar la funcion que genera la cadena original
+                string strCadenaOriginal = cadenaOriginal;
                 SecureString identidad = new SecureString();// Se requerira un objeto SecureString que represente el password de la clave privada, que se obtiene asi:
                 identidad.Clear();
                 //foreach (char c in lPassword.ToCharArray())

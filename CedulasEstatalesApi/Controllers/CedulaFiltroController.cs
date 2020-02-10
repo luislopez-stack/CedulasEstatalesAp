@@ -71,6 +71,7 @@ namespace CedulasEstatalesApi.Controllers
                                                CEDULAESTATAL = item.TIPO_CEDULA+"-"+(item.ID_CEDULA.ToString()),
                                                CEDULAFEDERAL = item.CEDULA_FEDERAL,
                                                SELLO = item.SELLO,
+                                               HASH = item.HASH_QR,
                                            }).ToList();
             return list;
 

@@ -41,6 +41,7 @@ namespace CedulasEstatalesApi.Controllers
                                                   CEDULAESTATAL = item.TIPO_CEDULA+"-"+item.ID_CEDULA,
                                                   XML = db.XML.Where(x => x.ID_CEDULA == item.ID_CEDULA).FirstOrDefault().XML1,
                                                   SELLO = item.SELLO,
+                                                  HASH = item.HASH_QR,
                                               }).ToList();
             return listaQr;
         }
@@ -52,7 +53,7 @@ namespace CedulasEstatalesApi.Controllers
             //DOC_CEDULA item = db.DOC_CEDULA.Find(id);
             var item = db.DOC_CEDULA.Where(h => h.HASH_QR == id).FirstOrDefault(); ;
             Models.camposXml registro = new Models.camposXml();
-            if (registro == null)
+            if (item == null)
             {
                 registro.NOMBRE = "La cedula no se encuentra almacenada";
             }
@@ -125,7 +126,7 @@ namespace CedulasEstatalesApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (camposXml.CEDULAFEDERAL == null) { cedulaF = "0000000"; } else { cedulaF = camposXml.CEDULAFEDERAL; }
+            if (camposXml.CEDULAFEDERAL == null || camposXml.CEDULAFEDERAL == "") { cedulaF = "0000000"; } else { cedulaF = camposXml.CEDULAFEDERAL; }
             
 
             //////CREAR Y CARGAR CEDULA
