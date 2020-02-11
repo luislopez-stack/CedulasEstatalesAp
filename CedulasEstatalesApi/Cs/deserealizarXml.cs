@@ -52,7 +52,11 @@ namespace CedulasEstatalesApi.Cs
                 camposXml.CVECARRERA = node.Attribute("cveCarrera").Value.ToString();
                 camposXml.NOMBRECARRERA = node.Attribute("nombreCarrera").Value.ToString();
             }
-            
+
+            if (camposXml.NOMBRE == null || camposXml.NOMBREINSTITUCION == null || camposXml.CVECARRERA == null)
+            {
+                camposXml.NOMBRE = "El archivo cargado es incopatible con el formato de titulo digital";
+            }
             camposXml.XML = stgArchivo;
             return camposXml;
 

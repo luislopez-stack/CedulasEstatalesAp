@@ -16,6 +16,7 @@ namespace CedulasEstatalesApi.Controllers
     {
         private CedulaEstatalEntities db = new CedulaEstatalEntities();
         Models.cargaTituloXml cargaTituloXml = new Models.cargaTituloXml();
+        private Cs.procesos rolUsuario = new Cs.procesos();
 
         // GET: api/CargaXml
         /*public IQueryable<DOC_CEDULA> GetDOC_CEDULA()
@@ -74,11 +75,34 @@ namespace CedulasEstatalesApi.Controllers
         // POST: api/CargaXml
         public IHttpActionResult Post(Models.cargaTituloXml cargaXml)
         {
-            //MANDAR A LLAMAR FUNCION DESEARIZAR XML
-            Cs.deserealizarXml deserealizarXml = new Cs.deserealizarXml();
-            var camposXml = deserealizarXml.deserealizar(cargaXml.ARCHIVO_XML);
+            //VALIDAR USUARIO
+            var usuario = rolUsuario.tomarUsuario();
+            int ban = usuario.ban;
+            string filtro = usuario.correo;
+            int id_usuario = usuario.id_usuario;
+            int perfil = usuario.id_rol;
+            string alcances = usuario.alcances;
+            int maxb = usuario.maxb;
 
-            return Ok(camposXml);
+            if (ban <= maxb)
+            {
+                if (!ModelState.IsValid && cargaXml.ARCHIVO_XML == null)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                //MANDAR A LLAMAR FUNCION DESEARIZAR XML
+                Cs.deserealizarXml deserealizarXml = new Cs.deserealizarXml();
+                var camposXml = deserealizarXml.deserealizar(cargaXml.ARCHIVO_XML);
+
+                return Ok(camposXml);
+            }
+            else
+            {
+                return BadRequest("El Correo Electrónico // o Id de usuario // o Perfil Es incorrecto... ");
+            }
+
+            
         }
 
         // DELETE: api/CargaXml/5

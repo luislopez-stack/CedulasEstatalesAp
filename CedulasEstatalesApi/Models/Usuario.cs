@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Titulosf.Models
+namespace CedulasEstatalesApi.Models
 {
     public class Usuario
     {
@@ -13,6 +13,5 @@ namespace Titulosf.Models
         public int ban { get; set; }
         public string alcances { get; set; }
         public int maxb { get; set; }
-        public string cvct { get; set; }
     }
 }
