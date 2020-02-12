@@ -275,6 +275,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CedulasEstatalesModel1.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Controllers\CambioEstatusController.cs" />
     <Compile Include="Controllers\CargaXmlController.cs" />
     <Compile Include="Controllers\CedulaController.cs" />
     <Compile Include="Controllers\CedulaFiltroController.cs" />
@@ -286,6 +287,7 @@
     <Compile Include="DOC_CEDULA.cs">
       <DependentUpon>CedulasEstatalesModel1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\cambioEstatusModel.cs" />
     <Compile Include="Models\camposXml.cs" />
     <Compile Include="Models\cargaTituloXml.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -353,7 +355,9 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

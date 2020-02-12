@@ -27,6 +27,7 @@ namespace CedulasEstatalesApi
         public string NO_CERTIFICADO { get; set; }
         public string CERTIFICADO { get; set; }
         public string PASSWORD { get; set; }
+        public byte[] LLAVE { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DOC_CEDULA> DOC_CEDULA { get; set; }

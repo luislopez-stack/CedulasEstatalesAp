@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -7,8 +9,10 @@ using System.Web.Http;
 
 namespace CedulasEstatalesApi.Controllers
 {
-    public class ValuesController : ApiController
+    public class ValuesController : ApiController   
     {
+        private CedulaEstatalEntities db = new CedulaEstatalEntities();
+
         // GET api/values
         public IEnumerable<string> Get()
         {
@@ -36,8 +40,21 @@ namespace CedulasEstatalesApi.Controllers
         }
 
         // PUT api/values/5
-        public void Put(int id, [FromBody]string value)
+        public IHttpActionResult Put(int id, Models.cargaTituloXml archivoKey)
         {
+             ///////AGREGAR .KEY A DB
+            /*var firmanteKey = db.CAT_FIRMANTE.Where(f => f.ID_FIRMANTE == id).FirstOrDefault();
+            firmanteKey.LLAVE = archivoKey.ARCHIVO_XML;
+            db.Entry(firmanteKey).State = EntityState.Modified;
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                return BadRequest("ERROR: Al actualizar sello " + ex.ToString());
+            }*/
+            return Ok();
         }
 
         // DELETE api/values/5

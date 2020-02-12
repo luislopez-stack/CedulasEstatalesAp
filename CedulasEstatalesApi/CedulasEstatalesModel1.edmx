@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="CedulaEstatalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="CedulaEstatalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="BITACORA">
           <Key>
             <PropertyRef Name="ID_BITACORA" />
@@ -33,6 +33,7 @@
           <Property Name="NO_CERTIFICADO" Type="varchar" MaxLength="20" />
           <Property Name="CERTIFICADO" Type="varchar" MaxLength="5000" />
           <Property Name="PASSWORD" Type="varchar" MaxLength="20" />
+          <Property Name="LLAVE" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="CAT_MOVIMIENTO">
           <Key>
@@ -158,8 +159,7 @@
             <End Role="XML" EntitySet="XML" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CedulaEstatalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -195,6 +195,7 @@
           <Property Name="CERTIFICADO" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
           <Property Name="PASSWORD" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="DOC_CEDULA" Relationship="Self.FK_DOC_CEDU_REFERENCE_CAT_FIRM" FromRole="CAT_FIRMANTE" ToRole="DOC_CEDULA" />
+          <Property Name="LLAVE" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="CAT_MOVIMIENTO">
           <Key>
@@ -354,6 +355,7 @@
           <EntitySetMapping Name="CAT_FIRMANTE">
             <EntityTypeMapping TypeName="CedulaEstatalModel.CAT_FIRMANTE">
               <MappingFragment StoreEntitySet="CAT_FIRMANTE">
+                <ScalarProperty Name="LLAVE" ColumnName="LLAVE" />
                 <ScalarProperty Name="ID_FIRMANTE" ColumnName="ID_FIRMANTE" />
                 <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
                 <ScalarProperty Name="PRIMER_APELLIDO" ColumnName="PRIMER_APELLIDO" />

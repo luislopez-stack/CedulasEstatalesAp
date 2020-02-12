@@ -46,7 +46,7 @@ namespace CedulasEstatalesApi.Controllers
                                                       ESTATUS = item.ID_ESTATUS,
                                                       CEDULAFEDERAL = item.CEDULA_FEDERAL,
                                                       CEDULAESTATAL = item.TIPO_CEDULA + "-" + item.ID_CEDULA,
-                                                      XML = db.XML.Where(x => x.ID_CEDULA == item.ID_CEDULA).FirstOrDefault().XML1,
+                                                      //XML = db.XML.Where(x => x.ID_CEDULA == item.ID_CEDULA).FirstOrDefault().XML1,
                                                       SELLO = item.SELLO,
                                                       HASH = item.HASH_QR,
                                                   }).ToList();
@@ -195,15 +195,15 @@ namespace CedulasEstatalesApi.Controllers
                 //////PROSESO DE SELLADO
                 string idCedE = tipoCedula + "-" + ((idCedula).ToString());
                 string cadenaOriginal = sellado.cadenaOriginal(camposXml, idCedE, cedulaF, fechaCarga, idFirmante);
-                //string sello = sellado.crearSello(cadenaOriginal, idFirmante);
                 string sello = sellado.crearSello(cadenaOriginal, idFirmante);
                 string selloSubstring = sello.Substring(0, 5);
                 if (selloSubstring == "Error")
                 {
                     return BadRequest(sello);
                 }
+                /////CREACION DE HASH
                 string hashQr = sellado.stringSha265(idCedE);
-
+                /////COMPLETAN LOS CAMPOS FALTANTES DE DOC_CEDULA
                 var cedula = db.DOC_CEDULA.Where(c => c.ID_CEDULA == idCedula).FirstOrDefault();
                 cedula.SELLO = sello;
                 cedula.HASH_QR = hashQr;
@@ -222,6 +222,7 @@ namespace CedulasEstatalesApi.Controllers
                 {
                     ID_CEDULA = idCedula,
                     XML1 = camposXml.XML,
+                    
                 });
                 db.XML.Add(xML);
                 try

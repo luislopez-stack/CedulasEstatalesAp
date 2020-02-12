@@ -40,13 +40,11 @@ namespace CedulasEstatalesApi.Cs
         {
             string sellodigital = "";
             var firmante = db.CAT_FIRMANTE.Find(idFirmante);
-            //byte[] byteKey = firmante.KEY;
             try
-            {
-                //string archivoCertificado = "";
-                //string key = @"C:\Users\Luis\Documents\MiTitulo\FIEL_AULJ951012PZ7_20190328160816\Claveprivada_FIEL_SOLR761006UN5_20191112_125540.key";
+            {                
                 string key = @"C:\CedulasEstatales\key\Claveprivada_FIEL_SOLR761006UN5_20191112_125540.key";
-                
+
+                byte[] byteKey = firmante.LLAVE;
                 string Password = firmante.PASSWORD;
                 string strCadenaOriginal = cadenaOriginal;
                 SecureString identidad = new SecureString();// Se requerira un objeto SecureString que represente el password de la clave privada, que se obtiene asi:
@@ -57,8 +55,8 @@ namespace CedulasEstatalesApi.Cs
                     identidad.AppendChar(c);
                 }
 
-                //Byte[] llavePrivada = byteKey;
-                Byte[] llavePrivada = System.IO.File.ReadAllBytes(key);
+                Byte[] llavePrivada = byteKey;
+                //Byte[] llavePrivada = System.IO.File.ReadAllBytes(key);
                 RSACryptoServiceProvider rsa = JavaScience.opensslkey.DecodeEncryptedPrivateKeyInfo(llavePrivada, identidad);// Uso de la clase opensslkey
                 SHA1CryptoServiceProvider hasher = new SHA1CryptoServiceProvider();
                 Byte[] bytesFirmados = rsa.SignData(System.Text.Encoding.UTF8.GetBytes(strCadenaOriginal), hasher);
