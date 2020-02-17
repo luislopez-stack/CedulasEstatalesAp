@@ -18,7 +18,7 @@ namespace CedulasEstatalesApi.Controllers
         private Cs.procesos rolUsuario = new Cs.procesos();
 
         // GET: api/Cedula
-        public List<Models.camposXml> GetDOC_CEDULA()
+        public List<Models.camposCedula> GetDOC_CEDULA()
         {
 
             //VALIDAR USUARIO
@@ -33,22 +33,24 @@ namespace CedulasEstatalesApi.Controllers
             if (ban <= maxb)
             {
                 var dOC_CEDULA = db.DOC_CEDULA;
-                List<Models.camposXml> listaQr = (from DOC_CEDULA item in dOC_CEDULA.AsEnumerable()
-                                                  select new Models.camposXml
+                List<Models.camposCedula> listaQr = (from DOC_CEDULA item in dOC_CEDULA.AsEnumerable()
+                                                  select new Models.camposCedula
                                                   {
                                                       NOMBRE = item.NOMBRES,
                                                       PRIMERAPELLIDO = item.PRIMER_APELLIDO,
                                                       SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
                                                       CURP = item.CURP,
+                                                      NOMBREINSTITUCION = item.INSTITUCION,
                                                       CVECARRERA = item.ID_CARRERA.ToString(),
                                                       NOMBRECARRERA = item.DESC_CARRERA,
-                                                      NOMBREINSTITUCION = item.INSTITUCION,
-                                                      ESTATUS = item.ID_ESTATUS,
                                                       CEDULAFEDERAL = item.CEDULA_FEDERAL,
-                                                      CEDULAESTATAL = item.TIPO_CEDULA + "-" + item.ID_CEDULA,
-                                                      //XML = db.XML.Where(x => x.ID_CEDULA == item.ID_CEDULA).FirstOrDefault().XML1,
-                                                      SELLO = item.SELLO,
+                                                      CEDULAESTATAL = item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
+                                                      ESTATUS = item.ID_ESTATUS,
+                                                      FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy"),
+                                                      URL = "http://validacedulas.iea.edu.mx?HASH=",
                                                       HASH = item.HASH_QR,
+                                                      SELLO = item.SELLO,
+                                                      
                                                   }).ToList();
                 return listaQr;
             }
@@ -62,12 +64,13 @@ namespace CedulasEstatalesApi.Controllers
         }
 
         // GET: api/Cedula/HASH
-        [ResponseType(typeof(Models.camposXml))]
-        public Models.camposXml GetDOC_CEDULA(string id)
+        [ResponseType(typeof(Models.camposCedula))]
+        public Models.camposCedula GetDOC_CEDULA(string HASH)
         {
+            string id = HASH;
             //DOC_CEDULA item = db.DOC_CEDULA.Find(id);
             var item = db.DOC_CEDULA.Where(h => h.HASH_QR == id).FirstOrDefault(); ;
-            Models.camposXml registro = new Models.camposXml();
+            Models.camposCedula registro = new Models.camposCedula();
             if (item == null)
             {
                 registro.NOMBRE = "La cedula no se encuentra almacenada";
@@ -78,11 +81,15 @@ namespace CedulasEstatalesApi.Controllers
                 registro.PRIMERAPELLIDO = item.PRIMER_APELLIDO;
                 registro.SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO;
                 registro.CURP = item.CURP;
+                registro.NOMBREINSTITUCION = item.INSTITUCION;
                 registro.CVECARRERA = item.ID_CARRERA.ToString();
                 registro.NOMBRECARRERA = item.DESC_CARRERA;
-                registro.NOMBREINSTITUCION = item.INSTITUCION;
-                registro.CEDULAESTATAL = item.TIPO_CEDULA + "-" + item.ID_CEDULA;
+                registro.CEDULAESTATAL = item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA);
                 registro.CEDULAFEDERAL = item.CEDULA_FEDERAL;
+                registro.ESTATUS = item.ID_ESTATUS;
+                registro.FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy");
+                registro.URL = "http://validacedulas.iea.edu.mx?HASH=";
+                registro.HASH = item.HASH_QR;
                 registro.SELLO = item.SELLO;
             }
             return registro;
@@ -125,7 +132,7 @@ namespace CedulasEstatalesApi.Controllers
 
         // POST: api/Cedula
         [ResponseType(typeof(DOC_CEDULA))]
-        public IHttpActionResult PostCedula(Models.camposXml camposXml)
+        public IHttpActionResult PostCedula(Models.docCedulaModel docCedula)
         {
             long idCedula;
             string fechaCarga;
@@ -150,19 +157,19 @@ namespace CedulasEstatalesApi.Controllers
 
             if (ban <= maxb)
             {
-                if (camposXml.CEDULAFEDERAL == null || camposXml.CEDULAFEDERAL == "") { cedulaF = "0000000"; } else { cedulaF = camposXml.CEDULAFEDERAL; }
+                if (docCedula.CEDULAFEDERAL == null || docCedula.CEDULAFEDERAL == "") { cedulaF = "0000000"; } else { cedulaF = docCedula.CEDULAFEDERAL; }
 
 
                 //////CREAR Y CARGAR CEDULA
                 DOC_CEDULA dOC_CEDULA = (new DOC_CEDULA()
                 {
-                    CURP = camposXml.CURP,
-                    NOMBRES = camposXml.NOMBRE,
-                    PRIMER_APELLIDO = camposXml.PRIMERAPELLIDO,
-                    SEGUNDO_APELLIDO = camposXml.SEGUNDOAPELLIDO,
-                    INSTITUCION = camposXml.NOMBREINSTITUCION,
-                    ID_CARRERA = Int32.Parse(camposXml.CVECARRERA),
-                    DESC_CARRERA = camposXml.NOMBRECARRERA,
+                    CURP = docCedula.CURP,
+                    NOMBRES = docCedula.NOMBRE,
+                    PRIMER_APELLIDO = docCedula.PRIMERAPELLIDO,
+                    SEGUNDO_APELLIDO = docCedula.SEGUNDOAPELLIDO,
+                    INSTITUCION = docCedula.NOMBREINSTITUCION,
+                    ID_CARRERA = Int32.Parse(docCedula.CVECARRERA),
+                    DESC_CARRERA = docCedula.NOMBRECARRERA,
 
                     TIPO_CEDULA = "A",
                     ID_ESTATUS = 1,
@@ -193,8 +200,9 @@ namespace CedulasEstatalesApi.Controllers
                 }
 
                 //////PROSESO DE SELLADO
-                string idCedE = tipoCedula + "-" + ((idCedula).ToString());
-                string cadenaOriginal = sellado.cadenaOriginal(camposXml, idCedE, cedulaF, fechaCarga, idFirmante);
+                string idCed = rolUsuario.numeroCedula(idCedula);
+                string idCedE = tipoCedula + "-" + idCed;
+                string cadenaOriginal = sellado.cadenaOriginal(docCedula, idCedE, cedulaF, fechaCarga, idFirmante);
                 string sello = sellado.crearSello(cadenaOriginal, idFirmante);
                 string selloSubstring = sello.Substring(0, 5);
                 if (selloSubstring == "Error")
@@ -221,7 +229,7 @@ namespace CedulasEstatalesApi.Controllers
                 XML xML = (new XML()
                 {
                     ID_CEDULA = idCedula,
-                    XML1 = camposXml.XML,
+                    XML1 = docCedula.XML,
                     
                 });
                 db.XML.Add(xML);

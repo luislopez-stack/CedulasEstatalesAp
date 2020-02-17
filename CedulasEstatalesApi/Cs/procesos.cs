@@ -100,6 +100,35 @@ namespace CedulasEstatalesApi.Cs
             return ban;
         }
 
+        public string numeroCedula(long idCedula)
+        {
+            string idced = "";
+            string idCedStrg = idCedula.ToString();
+            int leng = idCedStrg.Length;
+            switch (leng)
+            {
+                case 1:
+                    idced = "00000" + idCedStrg;
+                    break;
+                case 2:
+                    idced = "0000" + idCedStrg;
+                    break;
+                case 3:
+                    idced = "000" + idCedStrg;
+                    break;
+                case 4:
+                    idced = "00" + idCedStrg;
+                    break;
+                case 5:
+                    idced = "0" + idCedStrg;
+                    break;
+                case 6:
+                    idced = idCedula.ToString();
+                    break;
+            }
+            return idced;
+        }
+
         //Lee Tabla Estandar con Sql
         public DataTable LeeTabla(string query, SqlConnection conect)
         {

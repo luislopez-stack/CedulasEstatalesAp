@@ -288,6 +288,7 @@
       <DependentUpon>CedulasEstatalesModel1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\cambioEstatusModel.cs" />
+    <Compile Include="Models\camposCedula.cs" />
     <Compile Include="Models\camposXml.cs" />
     <Compile Include="Models\cargaTituloXml.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\docCedulaModel.cs" />
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XML.cs">

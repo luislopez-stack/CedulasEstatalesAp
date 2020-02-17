@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -25,7 +26,7 @@ namespace CedulasEstatalesApi.Controllers
 
         // GET: api/CedulaFiltro/5
         [ResponseType(typeof(DOC_CEDULA))]
-        public List<Models.camposXml> GetDOC_CEDULA(string id)
+        public List<Models.camposCedula> GetDOC_CEDULA(string id)
         {
             //VALIDAR USUARIO
             var usuario = rolUsuario.tomarUsuario();
@@ -69,21 +70,24 @@ namespace CedulasEstatalesApi.Controllers
                 }
 
                 var filtroQuery = db.DOC_CEDULA.SqlQuery(query);
-                List<Models.camposXml> list = (from DOC_CEDULA item in filtroQuery.AsEnumerable()
-                                               select new Models.camposXml
-                                               {
-                                                   NOMBRE = item.NOMBRES,
-                                                   PRIMERAPELLIDO = item.PRIMER_APELLIDO,
-                                                   SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
-                                                   CURP = item.CURP,
-                                                   CVECARRERA = item.ID_CARRERA.ToString(),
-                                                   NOMBRECARRERA = item.DESC_CARRERA,
-                                                   NOMBREINSTITUCION = item.INSTITUCION,
-                                                   ESTATUS = item.ID_ESTATUS,
-                                                   CEDULAESTATAL = item.TIPO_CEDULA + "-" + (item.ID_CEDULA.ToString()),
-                                                   CEDULAFEDERAL = item.CEDULA_FEDERAL,
-                                                   SELLO = item.SELLO,
-                                                   HASH = item.HASH_QR,
+                List<Models.camposCedula> list = (from DOC_CEDULA item in filtroQuery.AsEnumerable()
+                                                  select new Models.camposCedula
+                                                  {
+                                                      NOMBRE = item.NOMBRES,
+                                                      PRIMERAPELLIDO = item.PRIMER_APELLIDO,
+                                                      SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
+                                                      CURP = item.CURP,
+                                                      CVECARRERA = item.ID_CARRERA.ToString(),
+                                                      NOMBRECARRERA = item.DESC_CARRERA,
+                                                      NOMBREINSTITUCION = item.INSTITUCION,
+                                                      ESTATUS = item.ID_ESTATUS,
+                                                      CEDULAESTATAL = item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
+                                                      CEDULAFEDERAL = item.CEDULA_FEDERAL,
+                                                      URL = "http://validacedulas.iea.edu.mx?HASH=",
+                                                      HASH = item.HASH_QR,
+                                                      FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy"),
+                                                      SELLO = item.SELLO,
+                                                   
                                                }).ToList();
                 return list;
             }

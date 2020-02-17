@@ -28,10 +28,10 @@ namespace CedulasEstatalesApi.Controllers
         public IHttpActionResult GetCAT_ESTATUS(byte id)
         {
             CAT_ESTATUS cAT_ESTATUS = db.CAT_ESTATUS.Find(id);
-            if (cAT_ESTATUS == null)
+            /*if (cAT_ESTATUS == null)
             {
                 return NotFound();
-            }
+            }*/
 
             return Ok(cAT_ESTATUS);
         }
@@ -40,7 +40,7 @@ namespace CedulasEstatalesApi.Controllers
         [ResponseType(typeof(void))]
         public IHttpActionResult PutCAT_ESTATUS(byte id, CAT_ESTATUS cAT_ESTATUS)
         {
-            if (!ModelState.IsValid)
+            /*if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -66,7 +66,7 @@ namespace CedulasEstatalesApi.Controllers
                 {
                     throw;
                 }
-            }
+            }*/
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -93,6 +93,10 @@ namespace CedulasEstatalesApi.Controllers
             {
                 long idCedula = Int64.Parse(cAT_ESTATUS.ID_CEDULA.Substring(2));
                 var cedula = db.DOC_CEDULA.Where(e => e.ID_CEDULA == idCedula).FirstOrDefault();
+                if (cedula == null)
+                {
+                    return BadRequest("ERROR: La cedula: " + cAT_ESTATUS.ID_CEDULA + " no existe.");
+                }
                 byte estEnviar = 2;
                 cedula.ID_ESTATUS = estEnviar;
                 db.Entry(cedula).State = EntityState.Modified;
@@ -116,14 +120,14 @@ namespace CedulasEstatalesApi.Controllers
         public IHttpActionResult DeleteCAT_ESTATUS(byte id)
         {
             CAT_ESTATUS cAT_ESTATUS = db.CAT_ESTATUS.Find(id);
-            if (cAT_ESTATUS == null)
+            /*if (cAT_ESTATUS == null)
             {
                 return NotFound();
             }
 
             db.CAT_ESTATUS.Remove(cAT_ESTATUS);
             db.SaveChanges();
-
+            */
             return Ok(cAT_ESTATUS);
         }
 
