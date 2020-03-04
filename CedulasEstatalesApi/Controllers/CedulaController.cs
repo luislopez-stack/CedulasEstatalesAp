@@ -159,6 +159,14 @@ namespace CedulasEstatalesApi.Controllers
             {
                 if (docCedula.CEDULAFEDERAL == null || docCedula.CEDULAFEDERAL == "") { cedulaF = "0000000"; } else { cedulaF = docCedula.CEDULAFEDERAL; }
 
+                ////VALIDACION TITULO ANTERIORMENTE REGISTRADO
+                int clvCarrera = Int32.Parse(docCedula.CVECARRERA);
+                var tituloDuplicado = db.DOC_CEDULA.Where(c => c.ID_CARRERA == clvCarrera && c.CURP == docCedula.CURP).FirstOrDefault();
+
+                if (tituloDuplicado != null)
+                {
+                    return BadRequest("ERROR: El título ha sido cargado previamente");
+                }
 
                 //////CREAR Y CARGAR CEDULA
                 DOC_CEDULA dOC_CEDULA = (new DOC_CEDULA()
@@ -196,7 +204,7 @@ namespace CedulasEstatalesApi.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return BadRequest("ERROR: Al grabar cedula " + ex.ToString());
+                    return BadRequest("ERROR: Al grabar cedula");
                 }
 
                 //////PROSESO DE SELLADO
