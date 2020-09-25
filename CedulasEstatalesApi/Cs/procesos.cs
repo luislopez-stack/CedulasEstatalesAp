@@ -10,6 +10,7 @@ namespace CedulasEstatalesApi.Cs
     public class procesos
     {
         private string constring = "Data Source=10.20.1.8\\PBA_MAPCE;Initial Catalog=MAPCEV2;Persist Security Info=True;User ID=cjimenez;Password=#j1m3n3z-";
+        private CedulaEstatalEntities db = new CedulaEstatalEntities();
 
         public Models.Usuario tomarUsuario()
         {
@@ -127,6 +128,44 @@ namespace CedulasEstatalesApi.Cs
                     break;
             }
             return idced;
+        }
+        
+        public string tipoCedulaEstatal(long idCedula) {
+
+            string numCedula = "";
+            var cedula = db.DOC_CEDULA.Where(t => t.ID_CEDULA == idCedula).FirstOrDefault().TIPO_CEDULA;
+            switch (cedula) {
+                case "A":
+                    numCedula = "A" +"-"+ numeroCedula(idCedula);
+                    break;
+                case "B":
+                    numCedula = "0000000";
+                    break;
+                default:
+                    break;
+            }
+            return numCedula;
+        }
+
+        public string tipoCedulaFederal(long idCedula)
+        {
+
+            string numCedula = "";
+            var cedula = db.DOC_CEDULA.Where(t => t.ID_CEDULA == idCedula).FirstOrDefault();
+            string tpc = cedula.TIPO_CEDULA;
+            string cf = cedula.CEDULA_FEDERAL;
+            switch (tpc)
+            {
+                case "A":
+                    numCedula = cf;
+                    break;
+                case "B":
+                    numCedula = "B" + "-" + cf;
+                    break;
+                default:
+                    break;
+            }
+            return numCedula;
         }
 
         //Lee Tabla Estandar con Sql

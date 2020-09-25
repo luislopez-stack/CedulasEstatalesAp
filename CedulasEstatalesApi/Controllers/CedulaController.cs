@@ -43,8 +43,8 @@ namespace CedulasEstatalesApi.Controllers
                                                       NOMBREINSTITUCION = item.INSTITUCION,
                                                       CVECARRERA = item.ID_CARRERA.ToString(),
                                                       NOMBRECARRERA = item.DESC_CARRERA,
-                                                      CEDULAFEDERAL = item.CEDULA_FEDERAL,
-                                                      CEDULAESTATAL = item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
+                                                      CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
+                                                      CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA),//item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
                                                       ESTATUS = item.ID_ESTATUS,
                                                       FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy"),
                                                       URL = "http://validacedulas.iea.edu.mx?HASH=",
@@ -84,8 +84,8 @@ namespace CedulasEstatalesApi.Controllers
                 registro.NOMBREINSTITUCION = item.INSTITUCION;
                 registro.CVECARRERA = item.ID_CARRERA.ToString();
                 registro.NOMBRECARRERA = item.DESC_CARRERA;
-                registro.CEDULAESTATAL = item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA);
-                registro.CEDULAFEDERAL = item.CEDULA_FEDERAL;
+                registro.CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA);
+                registro.CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA);
                 registro.ESTATUS = item.ID_ESTATUS;
                 registro.FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy");
                 registro.URL = "http://validacedulas.iea.edu.mx?HASH=";
@@ -139,6 +139,9 @@ namespace CedulasEstatalesApi.Controllers
             byte idFirmante;
             string tipoCedula;
             string cedulaF;
+            string tpCedula;
+            bool cedulaFBool = false;
+            int idCarrera;
             Cs.sellado sellado = new Cs.sellado();
 
             if (!ModelState.IsValid)
@@ -157,16 +160,35 @@ namespace CedulasEstatalesApi.Controllers
 
             if (ban <= maxb)
             {
-                if (docCedula.CEDULAFEDERAL == null || docCedula.CEDULAFEDERAL == "") { cedulaF = "0000000"; } else { cedulaF = docCedula.CEDULAFEDERAL; }
-
-                ////VALIDACION TITULO ANTERIORMENTE REGISTRADO
-                int clvCarrera = Int32.Parse(docCedula.CVECARRERA);
-                var tituloDuplicado = db.DOC_CEDULA.Where(c => c.ID_CARRERA == clvCarrera && c.CURP == docCedula.CURP).FirstOrDefault();
-
-                if (tituloDuplicado != null)
+                if (docCedula.CEDULAFEDERAL == null || docCedula.CEDULAFEDERAL == "")
                 {
-                    return BadRequest("ERROR: El título ha sido cargado previamente");
+                    cedulaF = "0000000";
+                    tpCedula = "A";
+                    idCarrera = Int32.Parse(docCedula.CVECARRERA);
+                    ////VALIDACION TITULO ANTERIORMENTE REGISTRADO
+                    int clvCarrera = Int32.Parse(docCedula.CVECARRERA);
+                    var tituloDuplicado = db.DOC_CEDULA.Where(c => c.ID_CARRERA == clvCarrera && c.CURP == docCedula.CURP).FirstOrDefault();
+
+                    if (tituloDuplicado != null)
+                    {
+                        return BadRequest("ERROR: El título ha sido cargado previamente");
+                    }
                 }
+                else {
+                    cedulaF = docCedula.CEDULAFEDERAL;
+                    tpCedula = "B";
+                    cedulaFBool = true;
+                    idCarrera = 0;
+                    ////VALIDACION TITULO ANTERIORMENTE REGISTRADO
+                    var tituloDuplicado = db.DOC_CEDULA.Where(c => c.CEDULA_FEDERAL == cedulaF && c.CURP == docCedula.CURP).FirstOrDefault();
+
+                    if (tituloDuplicado != null)
+                    {
+                        return BadRequest("ERROR: El título ha sido cargado previamente");
+                    }
+                }
+                
+                
 
                 //////CREAR Y CARGAR CEDULA
                 DOC_CEDULA dOC_CEDULA = (new DOC_CEDULA()
@@ -176,10 +198,10 @@ namespace CedulasEstatalesApi.Controllers
                     PRIMER_APELLIDO = docCedula.PRIMERAPELLIDO,
                     SEGUNDO_APELLIDO = docCedula.SEGUNDOAPELLIDO,
                     INSTITUCION = docCedula.NOMBREINSTITUCION,
-                    ID_CARRERA = Int32.Parse(docCedula.CVECARRERA),
+                    ID_CARRERA = idCarrera,//Int32.Parse(docCedula.CVECARRERA),
                     DESC_CARRERA = docCedula.NOMBRECARRERA,
 
-                    TIPO_CEDULA = "A",
+                    TIPO_CEDULA = tpCedula,//"A",
                     ID_ESTATUS = 1,
                     FECHA_CARGA = DateTime.Now,
                     FECHA_SELLO = DateTime.Now,
@@ -233,19 +255,22 @@ namespace CedulasEstatalesApi.Controllers
                     return BadRequest("ERROR: Al actualizar sello " + ex.ToString());
                 }
 
-                /////ALMACENA XML
-                XML xML = (new XML()
-                {
-                    ID_CEDULA = idCedula,
-                    XML1 = docCedula.XML,
-                    
-                });
-                db.XML.Add(xML);
-                try
-                {
-                    db.SaveChanges();
+                if (cedulaFBool == false) {
+                    /////ALMACENA XML
+                    XML xML = (new XML()
+                    {
+                        ID_CEDULA = idCedula,
+                        XML1 = docCedula.XML,
+
+                    });
+                    db.XML.Add(xML);
+                    try
+                    {
+                        db.SaveChanges();
+                    }
+                    catch (Exception ex) { BadRequest("ERROR: Al grabar xml " + ex.ToString()); }
                 }
-                catch (Exception ex) { BadRequest("ERROR: Al grabar xml " + ex.ToString()); }
+                
 
                 //////ALMACENAMOS EN BITACORA
                 BITACORA bITACORA = (new BITACORA()
