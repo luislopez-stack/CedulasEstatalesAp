@@ -7,6 +7,7 @@ namespace CedulasEstatalesApi.Models
 {
     public class camposCedula
     {
+        public long ID_CEDULA { get; set; }
         public string NOMBRE { get; set; }
         public string PRIMERAPELLIDO { get; set; }
         public string SEGUNDOAPELLIDO { get; set; }

@@ -36,6 +36,7 @@ namespace CedulasEstatalesApi.Controllers
                 List<Models.camposCedula> listaQr = (from DOC_CEDULA item in dOC_CEDULA.AsEnumerable()
                                                   select new Models.camposCedula
                                                   {
+                                                      ID_CEDULA = item.ID_CEDULA,
                                                       NOMBRE = item.NOMBRES,
                                                       PRIMERAPELLIDO = item.PRIMER_APELLIDO,
                                                       SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
@@ -46,7 +47,7 @@ namespace CedulasEstatalesApi.Controllers
                                                       CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
                                                       CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA),//item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
                                                       ESTATUS = item.ID_ESTATUS,
-                                                      FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy"),
+                                                      FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO),
                                                       URL = "http://validacedulas.iea.edu.mx?HASH=",
                                                       HASH = item.HASH_QR,
                                                       SELLO = item.SELLO,
@@ -87,7 +88,7 @@ namespace CedulasEstatalesApi.Controllers
                 registro.CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA);
                 registro.CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA);
                 registro.ESTATUS = item.ID_ESTATUS;
-                registro.FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy");
+                registro.FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO);
                 registro.URL = "http://validacedulas.iea.edu.mx?HASH=";
                 registro.HASH = item.HASH_QR;
                 registro.SELLO = item.SELLO;

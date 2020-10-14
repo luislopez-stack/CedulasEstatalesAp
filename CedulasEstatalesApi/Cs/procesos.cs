@@ -168,6 +168,17 @@ namespace CedulasEstatalesApi.Cs
             return numCedula;
         }
 
+        public string fechanull(DateTime? fecha) {
+
+            string fechaFormart;
+            if (fecha != null) {
+                fechaFormart = fecha.Value.ToString("dd \\de MMMM \\de yyyy");
+                return fechaFormart;
+            }
+
+            return fecha.ToString(); ;
+        }
+
         //Lee Tabla Estandar con Sql
         public DataTable LeeTabla(string query, SqlConnection conect)
         {

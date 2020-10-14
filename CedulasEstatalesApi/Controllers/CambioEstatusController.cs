@@ -91,7 +91,7 @@ namespace CedulasEstatalesApi.Controllers
 
             if (ban <= maxb)
             {
-                long idCedula = Int64.Parse(cAT_ESTATUS.ID_CEDULA.Substring(2));
+                long idCedula = Int64.Parse( cAT_ESTATUS.ID_CEDULA);
                 var cedula = db.DOC_CEDULA.Where(e => e.ID_CEDULA == idCedula).FirstOrDefault();
                 if (cedula == null)
                 {

@@ -73,6 +73,7 @@ namespace CedulasEstatalesApi.Controllers
                 List<Models.camposCedula> list = (from DOC_CEDULA item in filtroQuery.AsEnumerable()
                                                   select new Models.camposCedula
                                                   {
+                                                      ID_CEDULA = item.ID_CEDULA,
                                                       NOMBRE = item.NOMBRES,
                                                       PRIMERAPELLIDO = item.PRIMER_APELLIDO,
                                                       SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
@@ -85,7 +86,7 @@ namespace CedulasEstatalesApi.Controllers
                                                       CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
                                                       URL = "http://validacedulas.iea.edu.mx?HASH=",
                                                       HASH = item.HASH_QR,
-                                                      FECHA_SELLO = item.FECHA_SELLO.Value.ToString("dd \\de MMMM \\de yyyy"),
+                                                      FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO),
                                                       SELLO = item.SELLO,
                                                    
                                                }).ToList();
