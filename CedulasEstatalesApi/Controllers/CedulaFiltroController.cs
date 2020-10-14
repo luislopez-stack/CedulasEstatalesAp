@@ -64,8 +64,8 @@ namespace CedulasEstatalesApi.Controllers
                         query = "select * from DOC_CEDULA where CURP = '" + curp + "'";
                         break;
                     case 2:
-                        query = "select * from DOC_CEDULA where FECHA_SELLO >= '" + fechaini.ToString("yyyy-dd-MM") + " 00:00:00" + "'"
-                            + " AND FECHA_SELLO <= '" + fechafin.ToString("yyyy-dd-MM") + " 23:00:00" + "'";
+                        query = "select * from DOC_CEDULA where FECHA_CARGA >= '" + fechaini.ToString("yyyy-dd-MM") + " 00:00:00" + "'"
+                            + " AND FECHA_CARGA <= '" + fechafin.ToString("yyyy-dd-MM") + " 23:00:00" + "'";
                         break;
                 }
 

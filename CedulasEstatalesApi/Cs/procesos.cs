@@ -133,17 +133,7 @@ namespace CedulasEstatalesApi.Cs
         public string tipoCedulaEstatal(long idCedula) {
 
             string numCedula = "";
-            var cedula = db.DOC_CEDULA.Where(t => t.ID_CEDULA == idCedula).FirstOrDefault().TIPO_CEDULA;
-            switch (cedula) {
-                case "A":
-                    numCedula = "A" +"-"+ numeroCedula(idCedula);
-                    break;
-                case "B":
-                    numCedula = "0000000";
-                    break;
-                default:
-                    break;
-            }
+            numCedula = "A" + "-" + numeroCedula(idCedula);
             return numCedula;
         }
 
