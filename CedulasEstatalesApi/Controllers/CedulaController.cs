@@ -32,32 +32,40 @@ namespace CedulasEstatalesApi.Controllers
 
             if (ban <= maxb)
             {
-                var dOC_CEDULA = db.DOC_CEDULA;
-                List<Models.camposCedula> listaQr = (from DOC_CEDULA item in dOC_CEDULA.AsEnumerable()
-                                                  select new Models.camposCedula
-                                                  {
-                                                      ID_CEDULA = item.ID_CEDULA,
-                                                      NOMBRE = item.NOMBRES,
-                                                      PRIMERAPELLIDO = item.PRIMER_APELLIDO,
-                                                      SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
-                                                      CURP = item.CURP,
-                                                      NOMBREINSTITUCION = item.INSTITUCION,
-                                                      CVECARRERA = item.ID_CARRERA.ToString(),
-                                                      NOMBRECARRERA = item.DESC_CARRERA,
-                                                      CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
-                                                      CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA),//item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
-                                                      ESTATUS = item.ID_ESTATUS,
-                                                      FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO),
-                                                      URL = "http://validacedulas.iea.edu.mx?HASH=",
-                                                      HASH = item.HASH_QR,
-                                                      SELLO = item.SELLO,
+                try { 
+                    var dOC_CEDULA = db.DOC_CEDULA;
+                    List<Models.camposCedula> listaQr = (from DOC_CEDULA item in dOC_CEDULA.AsEnumerable()
+                                                      select new Models.camposCedula
+                                                      {
+                                                          ID_CEDULA = item.ID_CEDULA,
+                                                          NOMBRE = item.NOMBRES,
+                                                          PRIMERAPELLIDO = item.PRIMER_APELLIDO,
+                                                          SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
+                                                          CURP = item.CURP,
+                                                          NOMBREINSTITUCION = item.INSTITUCION,
+                                                          CVECARRERA = item.ID_CARRERA.ToString(),
+                                                          NOMBRECARRERA = item.DESC_CARRERA,
+                                                          CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
+                                                          CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA),//item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
+                                                          ESTATUS = item.ID_ESTATUS,
+                                                          FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO),
+                                                          URL = "http://validacedulas.iea.edu.mx?HASH=",
+                                                          HASH = item.HASH_QR,
+                                                          SELLO = item.SELLO,
                                                       
-                                                  }).ToList();
-                return listaQr;
+                                                      }).ToList();
+                    return listaQr;
+                }
+                catch (Exception ex) {
+                    ModelState.AddModelError(string.Empty, "No se recuperaron todos los campos de forma correcta");
+                    Log.WriteError(string.Format("No se recuperaron todos los campos de forma correcta: {0}", ex.ToString()));
+                    return null;
+                }
             }
             else
             {
                 ModelState.AddModelError(string.Empty, "El Correo Electrónico // o Id de usuario // o Perfil Es incorrecto... ");
+                Log.WriteError("El Correo Electrónico // o Id de usuario // o Perfil Es incorrecto... ");
                 return null;
             }
 

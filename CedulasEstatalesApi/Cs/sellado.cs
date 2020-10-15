@@ -64,7 +64,9 @@ namespace CedulasEstatalesApi.Cs
                 sellodigital = Convert.ToBase64String(bytesFirmados);// Obtengo Sello
 
             }
-            catch (Exception ex) { return sellodigital = "Error al sellar. La contraseña o el archivo .key parecen ser incorrectos. " + ex; }
+            catch (Exception ex) {
+                Log.WriteError(string.Format("Error: En el sellado: {0}", ex));
+                return sellodigital = "Error al sellar. La contraseña o el archivo .key parecen ser incorrectos. " + ex; }
 
             return sellodigital;
         }

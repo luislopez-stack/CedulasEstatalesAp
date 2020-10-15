@@ -280,6 +280,7 @@
     <Compile Include="Controllers\CedulaController.cs" />
     <Compile Include="Controllers\CedulaFiltroController.cs" />
     <Compile Include="Cs\deserealizarXml.cs" />
+    <Compile Include="Cs\Log.cs" />
     <Compile Include="Cs\opensslkey.cs" />
     <Compile Include="Cs\procesos.cs" />
     <Compile Include="Cs\sellado.cs" />

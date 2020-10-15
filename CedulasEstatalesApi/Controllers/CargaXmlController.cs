@@ -88,12 +88,18 @@ namespace CedulasEstatalesApi.Controllers
             {
                 if (!ModelState.IsValid && cargaXml.ARCHIVO_XML == null)
                 {
+                    Log.WriteError("Modelo Incompleto");
                     return BadRequest(ModelState);
                 }
 
                 //MANDAR A LLAMAR FUNCION DESEARIZAR XML
                 Cs.deserealizarXml deserealizarXml = new Cs.deserealizarXml();
                 var camposXml = deserealizarXml.deserealizar(cargaXml.ARCHIVO_XML);
+
+                if (camposXml.NOMBRE.Substring(0,5) == "Error") {
+                    Log.WriteError(string.Format("{0}",camposXml.NOMBRE.ToString()));
+                    return BadRequest(string.Format("{0}", camposXml.NOMBRE.ToString()));
+                }
 
                 return Ok(camposXml);
             }

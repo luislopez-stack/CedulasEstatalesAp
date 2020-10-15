@@ -69,28 +69,36 @@ namespace CedulasEstatalesApi.Controllers
                         break;
                 }
 
-                var filtroQuery = db.DOC_CEDULA.SqlQuery(query);
-                List<Models.camposCedula> list = (from DOC_CEDULA item in filtroQuery.AsEnumerable()
-                                                  select new Models.camposCedula
-                                                  {
-                                                      ID_CEDULA = item.ID_CEDULA,
-                                                      NOMBRE = item.NOMBRES,
-                                                      PRIMERAPELLIDO = item.PRIMER_APELLIDO,
-                                                      SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
-                                                      CURP = item.CURP,
-                                                      CVECARRERA = item.ID_CARRERA.ToString(),
-                                                      NOMBRECARRERA = item.DESC_CARRERA,
-                                                      NOMBREINSTITUCION = item.INSTITUCION,
-                                                      ESTATUS = item.ID_ESTATUS,
-                                                      CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA),//item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
-                                                      CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
-                                                      URL = "http://validacedulas.iea.edu.mx?HASH=",
-                                                      HASH = item.HASH_QR,
-                                                      FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO),
-                                                      SELLO = item.SELLO,
+                try { 
+                    var filtroQuery = db.DOC_CEDULA.SqlQuery(query);
+                    List<Models.camposCedula> list = (from DOC_CEDULA item in filtroQuery.AsEnumerable()
+                                                      select new Models.camposCedula
+                                                      {
+                                                          ID_CEDULA = item.ID_CEDULA,
+                                                          NOMBRE = item.NOMBRES,
+                                                          PRIMERAPELLIDO = item.PRIMER_APELLIDO,
+                                                          SEGUNDOAPELLIDO = item.SEGUNDO_APELLIDO,
+                                                          CURP = item.CURP,
+                                                          CVECARRERA = item.ID_CARRERA.ToString(),
+                                                          NOMBRECARRERA = item.DESC_CARRERA,
+                                                          NOMBREINSTITUCION = item.INSTITUCION,
+                                                          ESTATUS = item.ID_ESTATUS,
+                                                          CEDULAESTATAL = rolUsuario.tipoCedulaEstatal(item.ID_CEDULA),//item.TIPO_CEDULA + "-" + rolUsuario.numeroCedula(item.ID_CEDULA),
+                                                          CEDULAFEDERAL = rolUsuario.tipoCedulaFederal(item.ID_CEDULA),
+                                                          URL = "http://validacedulas.iea.edu.mx?HASH=",
+                                                          HASH = item.HASH_QR,
+                                                          FECHA_SELLO = rolUsuario.fechanull(item.FECHA_SELLO),
+                                                          SELLO = item.SELLO,
                                                    
-                                               }).ToList();
-                return list;
+                                                   }).ToList();
+                    return list;
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, "No se recuperaron todos los campos de forma correcta");
+                    Log.WriteError(string.Format("No se recuperaron todos los campos de forma correcta: {0}", ex.ToString()));
+                    return null;
+                }
             }
             else
             {

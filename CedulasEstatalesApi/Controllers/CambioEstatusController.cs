@@ -77,6 +77,7 @@ namespace CedulasEstatalesApi.Controllers
         {
             if (!ModelState.IsValid)
             {
+                Log.WriteError("Modelo invalido, faltan campos");
                 return BadRequest(ModelState);
             }
 
@@ -91,10 +92,11 @@ namespace CedulasEstatalesApi.Controllers
 
             if (ban <= maxb)
             {
-                long idCedula = Int64.Parse( cAT_ESTATUS.ID_CEDULA);
+                long idCedula = Int64.Parse(cAT_ESTATUS.ID_CEDULA.Substring(2));
                 var cedula = db.DOC_CEDULA.Where(e => e.ID_CEDULA == idCedula).FirstOrDefault();
                 if (cedula == null)
                 {
+                    Log.WriteError(string.Format("ERROR: La cedula: {0} no existe.", cAT_ESTATUS.ID_CEDULA));
                     return BadRequest("ERROR: La cedula: " + cAT_ESTATUS.ID_CEDULA + " no existe.");
                 }
                 byte estEnviar = 2;
@@ -106,12 +108,31 @@ namespace CedulasEstatalesApi.Controllers
                 }
                 catch (DbUpdateConcurrencyException ex)
                 {
+                    Log.WriteError(string.Format("ERROR: Al actualizar estatus: {0}", ex.ToString()));
                     return BadRequest("ERROR: Al actualizar estatus " + ex.ToString());
                 }
 
-                return Ok(cedula.TIPO_CEDULA + "-" + cedula.ID_CEDULA);
+                //////ALMACENAMOS EN BITACORA
+                BITACORA bITACORA = (new BITACORA()
+                {
+                    ID_CEDULA = idCedula,
+                    FECHA = DateTime.Now,
+                    TIPO_MOVIMIENTO = 2,
+                    ID_USUARIO = id_usuario,
+                });
+                db.BITACORA.Add(bITACORA);
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (Exception ex) {
+                    Log.WriteError(string.Format("ERROR: Al grabar bitacora : {0}", ex.ToString()));
+                    BadRequest("ERROR: Al grabar bitacora " + ex.ToString()); }
+
+                return Ok(cedula.ID_CEDULA);
             }
 
+            Log.WriteError("El Correo Electrónico // o Id de usuario // o Perfil Es incorrecto... {0}");
             return BadRequest("El Correo Electrónico // o Id de usuario // o Perfil Es incorrecto... ");
         }
 
